@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghibli Art Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        input, button { margin: 10px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Ghibli Art Generator</h1>
+    <input type="file" id="upload" accept="image/*">
+    <button onclick="uploadImage()">Upload & Convert</button>
+    <h2>Output:</h2>
+    <img id="output" style="max-width: 100%; display: none;">
+    
+    <script>
+        function uploadImage() {
+            let input = document.getElementById('upload');
+            if (!input.files[0]) return alert("Please select an image!");
+            
+            let formData = new FormData();
+            formData.append('image', input.files[0]);
+            
+            fetch('/convert', { method: 'POST', body: formData })
+                .then(response => response.blob())
+                .then(blob => {
+                    let img = document.getElementById('output');
+                    img.src = URL.createObjectURL(blob);
+                    img.style.display = 'block';
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
